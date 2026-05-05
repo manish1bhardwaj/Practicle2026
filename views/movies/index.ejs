@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies - Movie App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container py-5">
+        <div class="row mb-4">
+            <div class="col">
+                <h1>All Movies</h1>
+            </div>
+            <% if (user) { %>
+                <div class="col-auto">
+                    <a href="/movies/new" class="btn btn-success">+ Add New Movie</a>
+                </div>
+            <% } %>
+        </div>
+
+        <% if (movies && movies.length > 0) { %>
+            <div class="row g-4">
+                <% movies.forEach(movie => { %>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= movie.title %></h5>
+                                <p class="card-text text-muted">
+                                    <small>
+                                        <strong>Genre:</strong> <%= movie.genre %><br>
+                                        <strong>Director:</strong> <%= movie.director %><br>
+                                        <strong>Release:</strong> <%= new Date(movie.releaseDate).toLocaleDateString() %><br>
+                                        <strong>Rating:</strong> 
+                                        <span class="badge bg-warning text-dark"><%= movie.rating %>/10</span>
+                                    </small>
+                                </p>
+                                <% if (movie.review) { %>
+                                    <p class="card-text">
+                                        <small><strong>Review:</strong> <%= movie.review.substring(0, 50) %>...</small>
+                                    </p>
+                                <% } %>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <a href="/movies/<%= movie._id %>" class="btn btn-sm btn-primary">View Details</a>
+                                <% if (user) { %>
+                                    <a href="/movies/<%= movie._id %>/edit" class="btn btn-sm btn-warning">Edit</a>
+                                    <form method="POST" action="/movies/<%= movie._id %>?_method=DELETE" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="alert alert-info" role="alert">
+                No movies found. <% if (user) { %><a href="/movies/new">Add the first one!</a><% } %>
+            </div>
+        <% } %>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <p>&copy; 2026 Movie App. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
