@@ -1,13 +1,12 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+
 const methodOverride = require('method-override');
 const session = require('express-session');
-const User = require('./models/User');
-
-
 const app = express();
 
+const User = require('./models/User');
 mongoose.connect('mongodb://localhost:27017/movie')
     .then(()=>{
         console.log("Db Connect");
@@ -27,13 +26,9 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.use((req, res) => {
-    res.status(404).render('404');
-});
-
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render('error', { error: err.message });
+    console.error(err);
+    res.status(500);
 });
 
 const PORT = 3000;
